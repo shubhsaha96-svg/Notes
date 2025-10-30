@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Notes.Data;
+
 namespace Notes
 {
     public class Program
@@ -7,6 +10,11 @@ namespace Notes
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            var connectionString = builder.Configuration.GetConnectionString("DbConnection");
+
+            builder.Services.AddDbContext<NoteDBContext>(options =>
+                options.UseSqlServer(connectionString));
+
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
@@ -28,7 +36,7 @@ namespace Notes
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Notes}/{action=GetNotes}/{id?}");
 
             app.Run();
         }
